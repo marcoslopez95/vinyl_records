@@ -1,5 +1,10 @@
 <?php
 
+use App\Http\Controllers\AlbumController;
+use App\Http\Controllers\ArtistController;
+use App\Http\Controllers\GenreController;
+use App\Http\Controllers\RecordController;
+use App\Http\Controllers\RolController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +22,11 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::apiResources([
+    'albums' => AlbumController::class,
+    'artists' => ArtistController::class,
+    'genres' => GenreController::class,
+    'rols' => RolController::class,
+    'records' => RecordController::class,
+]);
