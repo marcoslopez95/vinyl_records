@@ -48,6 +48,8 @@ class AuthenticatedSessionController extends Controller
             $response = [
                 'token' => $token[1],
                 'type' => 'Bearer',
+                'first_name' => $user->first_name,
+                'rol' => $user->rol->name,
                 'expired' => Carbon::now()->addDay()
             ];
 
