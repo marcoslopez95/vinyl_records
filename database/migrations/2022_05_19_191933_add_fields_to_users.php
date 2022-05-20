@@ -20,7 +20,7 @@ class AddFieldsToUsers extends Migration
             $table->string('last_name');
             $table->string('phone');
             $table->string('avatar');
-            $table->boolean('validated')->default(false);
+            $table->string('confirmation_code')->nullable();
             $table->foreignId('rol_id')->default(2)->constrained()->onUpdate('cascade')->onDelete('restrict');
             $table->softDeletes();
         });

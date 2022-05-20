@@ -26,7 +26,8 @@ class User extends Authenticatable
         'phone',
         'avatar',
         'validated',
-        'rol_id'
+        'rol_id',
+        'confirmation_code'
     ];
 
     /**

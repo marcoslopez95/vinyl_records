@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -33,11 +34,27 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
-        $request->authenticate();
+        try{
+            $credentials = $request->only(['email','password']);
+            if (!Auth::attempt($credentials)){
+                return custom_response(false,'Contraseña incorrecta',[],425);
+            }
 
-        $request->session()->regenerate();
+            $user = Auth::user();
+            $tokenResult = $user->createToken('Personal Access Token');
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+            $token = $tokenResult->plainTextToken;
+            $token = explode('|',$token);
+            $response = [
+                'token' => $token[1],
+                'type' => 'Bearer',
+                'expired' => Carbon::now()->addDay()
+            ];
+
+            return custom_response(true,'Login',$response );
+        }catch(\Exception $e){
+            return custom_error($e);
+        }
     }
 
     /**

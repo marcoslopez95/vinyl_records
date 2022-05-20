@@ -23,14 +23,7 @@ class BaseController extends Controller implements CrudInterfaz {
 
             return custom_response(true,'Index',$this->object);
         }catch(Exception $e){
-            $error = [
-                'line'    => $e->getLine(),
-                'file'    => $e->getFile(),
-                'message' => $e->getMessage()
-            ];
-
-            Log::alert($error);
-            return custom_response(false);
+            return custom_error($e);
         }
     }
 
@@ -41,14 +34,7 @@ class BaseController extends Controller implements CrudInterfaz {
 
             return custom_response(true,'Creado con éxito',$this->object);
         }catch(Exception $e){
-            $error = [
-                'line'    => $e->getLine(),
-                'file'    => $e->getFile(),
-                'message' => $e->getMessage()
-            ];
-
-            Log::alert($error);
-            return custom_response(false);
+            return custom_error($e);
         }
     }
 
@@ -59,14 +45,7 @@ class BaseController extends Controller implements CrudInterfaz {
 
             return custom_response(true,'Mostrar Registro',$this->object);
         }catch(Exception $e){
-            $error = [
-                'line'    => $e->getLine(),
-                'file'    => $e->getFile(),
-                'message' => $e->getMessage()
-            ];
-
-            Log::alert($error);
-            return custom_response(false);
+            return custom_error($e);
         }
     }
 
@@ -77,14 +56,7 @@ class BaseController extends Controller implements CrudInterfaz {
 
             return custom_response(true,'Actualizado con éxito',$this->object);
         }catch(Exception $e){
-            $error = [
-                'line'    => $e->getLine(),
-                'file'    => $e->getFile(),
-                'message' => $e->getMessage()
-            ];
-
-            Log::alert($error);
-            return custom_response(false);
+            return custom_error($e);
         }
     }
 
@@ -95,14 +67,7 @@ class BaseController extends Controller implements CrudInterfaz {
 
             return custom_response(true,'Eliminado con éxito',$this->object);
         }catch(Exception $e){
-            $error = [
-                'line'    => $e->getLine(),
-                'file'    => $e->getFile(),
-                'message' => $e->getMessage()
-            ];
-
-            Log::alert($error);
-            return custom_response(false);
+            return custom_error($e);
         }
     }
 

@@ -5,12 +5,16 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use Carbon\Carbon;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 
 class RegisteredUserController extends Controller
 {
@@ -34,22 +38,52 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        try{
+            $validate = Validator::make(
+                $request->all(),
+                [
+                    'email'         => 'required|string|email|max:255|unique:users',
+                    'password'      => 'required|min:8|confirmed',
+                    'first_name'    => 'required|string',
+                    'last_name'     => 'required|string',
+                    'phone'         => 'required|string',
+                    'avatar'        => 'required|string',
+                ],
+                [
+                    'required'  => 'El :attribute es requerido',
+                    'string'    => 'El :attribute debe ser texto',
+                    'email'     => 'No es un correo valido',
+                    'unique'    => 'El correo ya está registrado',
+                    'min'       => 'La contraseña debe ser de al menos 8 caracteres',
+                    'confirmed' => 'Las contraseñas no coinciden'
+                ]
+                );
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+                if($validate->fails()){
+                    $first_error = $validate->getMessageBag()->first();
+                    return custom_response(false, 'Error de validación',$first_error);
+                }
 
-        event(new Registered($user));
+            $request['password'] = Hash::make($request->password);
+            $request['confirmation_code'] = Str::random(255);
+            $user = User::create($request->all());
 
-        Auth::login($user);
+           // event(new Registered($user));
+            $token = $user->createToken('API Token')->plainTextToken;
+            $token = explode('|',$token);
+            $message= [
+                'expired' => Carbon::now()->addDay(),
+                'token'   => $token[1],
+                'type'    => 'Bearer'
+            ];
 
-        return redirect(RouteServiceProvider::HOME);
+            Mail::send('emails.confirmation_code', $request->all(), function($message) use ($request) {
+                $message->to($request['email'], $request['first_name'])->subject('Por favor confirma tu correo');
+            });
+
+            return custom_response(true,'Registrado',$message);
+        }catch(\Exception $e){
+            return custom_error($e);
+        }
     }
 }

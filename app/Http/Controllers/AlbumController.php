@@ -6,7 +6,6 @@ use App\Interfaces\CrudApiInterfaz;
 use App\Services\AlbumService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 
 class AlbumController extends BaseController implements CrudApiInterfaz
 {

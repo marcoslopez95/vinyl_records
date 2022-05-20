@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Log;
+
 if (! function_exists('custom_response')){
     function custom_response(bool $success = true, string $message = '',$data = [],int $code = 200)
     {
@@ -25,5 +27,19 @@ if (! function_exists('custom_response')){
         }
 
         return response()->json($response, $code);
+    }
+}
+
+if (! function_exists('custom_error')){
+    function custom_error(\Exception $e)
+    {
+        $error = [
+            'line'    => $e->getLine(),
+            'file'    => $e->getFile(),
+            'message' => $e->getMessage()
+        ];
+
+        Log::alert($error);
+        return custom_response(false);
     }
 }
