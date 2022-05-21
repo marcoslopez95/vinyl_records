@@ -1,12 +1,20 @@
 <template>
-  <div>
-      estoy en los discos
-  </div>
+<div>
+  <CardBase></CardBase>
+</div>
 </template>
 
 <script>
-export default {
+import CardBase from './CardBase.vue'
 
+export default {
+  name:'CardDiscos',
+  components:{ CardBase,},
+  data(){
+    return {
+      ruta: 'discos'
+    }
+  }
 }
 </script>
 

@@ -114,8 +114,8 @@ export default {
 
                 let auth = data.type + ' ' + data.token
                 axios.defaults.headers.common['Authorization'] = auth;
-                this.$router.push('/')
                 //console.log('login',data);
+                this.$router.push('/')
             }).catch((error) =>{
                 let e = error.response.data
                 this.error = e.message

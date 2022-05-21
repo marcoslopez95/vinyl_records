@@ -7,11 +7,9 @@
             fixed="top"
             class="px-3"
         >
-            <b-navbar-brand> 
-                <router-link to="/" tag="span" >
-                    Inicio
-                </router-link>
-                </b-navbar-brand>
+            <b-navbar-brand>
+                <router-link to="/" tag="span"> Inicio </router-link>
+            </b-navbar-brand>
 
             <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -21,10 +19,14 @@
                 class="justify-content-between"
             >
                 <b-navbar-nav>
-                    <b-nav-item v-for="(link, i) in links" :key="i" :active="link.to == path">
-                    <router-link :to="link.to" class="" tag="span">
-                    {{link.name}}
-                    </router-link>
+                    <b-nav-item
+                        v-for="(link, i) in links"
+                        :key="i"
+                        :active="link.to == path"
+                    >
+                        <router-link :to="{name:link.to}" tag="span" replace>
+                            {{ link.name }}
+                        </router-link>
                     </b-nav-item>
                 </b-navbar-nav>
 
@@ -68,7 +70,7 @@ export default {
     },
     mounted() {
         this.user = localStorage.getItem("first_name");
-        this.path = this.$route.path
+        this.path = this.$route.path;
         this.links.sort(function (a, b) {
             if (a.name > b.name) {
                 return 1;
@@ -78,32 +80,32 @@ export default {
             }
             // a must be equal to b
             return 0;
-            });
+        });
     },
     data() {
         return {
             user: "",
-            path: '',
+            path: "",
             links: [
                 {
                     name: "Generos Musicales",
-                    to: "/genre_musical",
+                    to: "genres",
                 },
                 {
                     name: "Albums",
-                    to: "/album",
+                    to: "albums",
                 },
                 {
                     name: "Artistas",
-                    to: "/artistas",
+                    to: "artists",
                 },
                 {
                     name: "Discos",
-                    to: "/discos",
+                    to: "records",
                 },
                 {
                     name: "Usuarios",
-                    to: "/usuarios",
+                    to: "users",
                 },
             ],
         };
