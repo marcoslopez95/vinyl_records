@@ -13,7 +13,7 @@ class UserRepository extends BaseRepository{
         parent::__construct($model);
     }
 
-    public function _index(array $data = [])
+    public function _index($data)
     {
         $users = $this->model::addSelect([
                         'rol_name' => Rol::select('name')->whereColumn('users.rol_id','rols.id')->limit(1),

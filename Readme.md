@@ -1,9 +1,11 @@
 # Vinyl Records
 
 ## Instalación del Back:
-    1. Agregas variables de entorno, *importante* se debe cargar la variable `APP_URL` con el puerto y servidor correspondiente, en el archivo `.env.example` está seteado en el `http://localhost:8001/`
+    1. Agregas variables de entorno, *importante* se debe cargar la variable `APP_URL` con el puerto y servidor correspondiente, en el archivo `.env.example` está seteado en el `http://localhost:8001/` . de igual manera para el envío de correo, esteblecer sus variables de entorno MAIL_*
     2. Ejecutar `Composer install`
+    3. ejecutar `php artisan key:generate`
     3. Crear las migraciones y ejecutar semillas `php artisan migrate --seed`
+    4. Ejecutar `php artisan storage:link`,
     3. Desplegar la api con `php artisan serv --port 8001`, si se desea cambiar el puerto para el despliegue, debe de cambiar los archivos `.env` tanto del back como del front
 
 ## Instalación del Front:

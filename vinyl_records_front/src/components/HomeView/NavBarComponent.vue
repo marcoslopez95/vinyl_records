@@ -71,7 +71,11 @@ export default {
     },
     mounted() {
         this.user = localStorage.getItem("first_name");
+        this.rol = localStorage.getItem("rol");
         this.path = this.$route.path;
+        if(this.user != 'Administrador'){
+            this.links.pop()
+        }
         this.links.sort(function (a, b) {
             if (a.name > b.name) {
                 return 1;
@@ -86,6 +90,7 @@ export default {
     data() {
         return {
             user: "",
+            rol: '',
             path: "",
             links: [
                 {
