@@ -110,9 +110,13 @@ class RegisteredUserController extends Controller
                 'type'    => 'Bearer'
             ];
 
-            Mail::send('emails.confirmation_code', $request->all(), function($message) use ($request) {
-                $message->to($request['email'], $request['first_name'])->subject('Por favor confirma tu correo');
-            });
+            try{
+                Mail::send('emails.confirmation_code', $request->all(), function($message) use ($request) {
+                    $message->to($request['email'], $request['first_name'])->subject('Por favor confirma tu correo');
+                });
+            }catch(\Exception $j){
+
+            }
             DB::commit();
             return custom_response(true,'Registrado',$message);
         }catch(\Exception $e){

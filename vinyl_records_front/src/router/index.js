@@ -38,7 +38,19 @@ const createRouter = () =>
           {
             path: "discos",
             name: "records",
-            component: DiscosView
+            component: DiscosView,
+            children: [
+              {
+                path: "create",
+                name: "records-create",
+                component: () => import("@/components/Discos/DiscoCreate.vue"),
+              },
+              {
+                path: "edit/:id",
+                name: "records-edit",
+                component: () => import('../components/Discos/DiscoEdit.vue')
+              },
+            ]
           },
           {
             path: "artistas",
@@ -99,6 +111,11 @@ const createRouter = () =>
         path: "login",
         name: "login",
         component: () => import("@/views/Login.vue"),
+      },
+      {
+        path: "register",
+        name: "register",
+        component: () => import("@/views/Register.vue"),
       },
     ],
   });

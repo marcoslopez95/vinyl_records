@@ -57,6 +57,7 @@ import {
     BNavbarToggle,
     BNavbarBrand,
 } from "bootstrap-vue";
+import { EventBus } from "@/event-bus";
 export default {
     name: "nav-bar-component",
     components: {
@@ -112,10 +113,7 @@ export default {
     },
     methods: {
         Logout() {
-            localStorage.removeItem("access_token");
-            localStorage.removeItem("type_token");
-            localStorage.removeItem("expired_token");
-            this.$router.push("login");
+          EventBus.$emit('salir');
         },
     },
 };

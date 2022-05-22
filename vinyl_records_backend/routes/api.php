@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('register', [RegisteredUserController::class, 'store']);
 Route::post('login', [AuthenticatedSessionController::class, 'store'])->name('login');
-
+Route::get('tastes',[GenreController::class,'index']);
 Route::middleware(['auth:sanctum'])->group(function(){
     Route::get('/user', function (Request $request) {
         return $request->user();

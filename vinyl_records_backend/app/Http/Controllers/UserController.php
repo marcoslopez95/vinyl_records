@@ -21,7 +21,7 @@ class UserController extends BaseController
         if(Auth::user()->rol->id != 1){
             return custom_response(false,'unauthorized');
         }
-        return parent::_index($request->all());
+        return parent::_index($request);
     }
 
     public function show(int $user){

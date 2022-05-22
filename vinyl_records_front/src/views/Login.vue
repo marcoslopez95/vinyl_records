@@ -1,6 +1,8 @@
 <template>
     <div class="center-xy">
+        <Register v-if="register" @login="register = false"></Register>
         <BCard
+        v-else
             align="center"
             header="Iniciar Sesión"
             header-class="fs-4 text"
@@ -44,7 +46,7 @@
 
             <BRow class="mt-3">
                 <BCol>
-                    <BButton variant="danger">
+                    <BButton variant="danger" @click="register = true">
                         Registrarse
                     </BButton>
                 </BCol>
@@ -55,6 +57,7 @@
                 </BCol>
             </BRow>
         </BCard>
+        
     </div>
 </template>
 
@@ -73,21 +76,24 @@ import {
     BInputGroupText,
     BAlert
 } from "bootstrap-vue";
+import { EventBus } from "@/event-bus";
+import Register from "./Register.vue";
 export default {
     name: "login",
     components: {
-        BCard,
-        BAlert,
-        BIconPersonFill,
-        BIconLockFill,
-        BInputGroupText,
-        BForm,
-        BInputGroup,
-        BFormInput,
-        BButton,
-        BRow,
-        BCol,
-    },
+    BCard,
+    BAlert,
+    BIconPersonFill,
+    BIconLockFill,
+    BInputGroupText,
+    BForm,
+    BInputGroup,
+    BFormInput,
+    BButton,
+    BRow,
+    BCol,
+    Register
+},
     data(){
         return {
             form: {
@@ -95,6 +101,7 @@ export default {
                 password: '',
             },
             error: '',
+            register:false,
             submit: false,
         }
     },
@@ -106,16 +113,18 @@ export default {
 
             axios.post(url,this.form).then((response)=>{
                 let data = response.data.data
-
+                console.log('login',data)
                 localStorage.setItem('access_token',data.token)
                 localStorage.setItem('type_token',data.type)
                 localStorage.setItem('first_name',data.first_name)
+                localStorage.setItem('rol',data.rol)
                 localStorage.setItem('expired_token',data.expired)
 
                 let auth = data.type + ' ' + data.token
-                axios.defaults.headers.common['Authorization'] = auth;
-                //console.log('login',data);
-                this.$router.push('/')
+                //headers['Authorization']= auth,
+                //console.log('auth',auth);
+                EventBus.$emit('login')
+                
             }).catch((error) =>{
                 let e = error.response.data
                 this.error = e.message

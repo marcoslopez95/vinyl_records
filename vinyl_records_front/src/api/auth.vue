@@ -1,3 +1,5 @@
+
+<script>
 let auth =
   localStorage.getItem("type_token") +
   " " +
@@ -8,4 +10,10 @@ let headers = {
 
 export default {
     headers
+
 }
+</script>
+
+<style>
+
+</style>

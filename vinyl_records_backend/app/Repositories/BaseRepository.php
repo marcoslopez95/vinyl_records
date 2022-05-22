@@ -15,8 +15,8 @@ class BaseRepository implements CrudInterfaz {
         $this->model = $model;
     }
 
-    public function _index(array $data = []){
-        $this->all = count($data) === 0 ? $this->model::all() : $this->model::Filter($data);
+    public function _index($data){
+        $this->all = count($data->all()) === 0 ? $this->model::all() : $this->model::Filter($data);
         return $this->all;
     }
 

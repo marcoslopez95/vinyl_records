@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Interfaces\CrudInterfaz;
 use App\Services\BaseService;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -17,7 +18,7 @@ class BaseController extends Controller implements CrudInterfaz {
         $this->service = $service;
     }
 
-    public function _index(array $data = []){
+    public function _index(Request $data){
         try{
 
             $this->object = $this->service->_index($data);

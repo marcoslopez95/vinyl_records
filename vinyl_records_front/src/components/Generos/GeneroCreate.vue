@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import CreateBase from "./CreateBase.vue";
+import CreateBase from "@/components/CreateBase.vue";
 import { BButton } from "bootstrap-vue";
 
 export default {

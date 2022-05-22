@@ -1,9 +1,14 @@
 <template>
     <BCard>
-        <b-button variant="primary" @click="crearRegistro()"
-            >Crear {{ name }}</b-button
-        >
-        <BTable hover :fields="fields" :items="items">
+        <BRow>
+            <BCol>
+                <b-button variant="primary" @click="crearRegistro()"
+                    >Crear {{ name }}</b-button
+                >
+            </BCol>
+            <slot name="botones"></slot>
+        </BRow>
+        <BTable hover :fields="fields" :items="items" sticky-header>
             <template #cell(#)="data">
                 {{ data.index + 1 }}
             </template>
@@ -28,15 +33,15 @@
 
 <script>
 import { BCard, BTable } from "bootstrap-vue";
-import headers from "../../api/auth";
 import axios from "axios";
-import { EventBus } from "../../event-bus";
+
 export default {
     name: "card-base",
     props: {
         fields: Array,
         ruta: String,
         name: String,
+        params: {type: Object, default: null}
     },
     components: {
         BCard,
@@ -46,12 +51,18 @@ export default {
         this.fields.unshift("#");
         this.fields.push("Acciones");
         this.getData();
-       // EventBus.$on('create',this.refresh)
+        // EventBus.$on('create',this.refresh)
     },
     data() {
         return {
             items: [],
         };
+    },
+    watch:{
+        params: function(nuevo){
+            console.log('base');
+            this.getData()
+        }
     },
     methods: {
         crearRegistro() {
@@ -64,13 +75,19 @@ export default {
             this.$router.push(ruta);
         },
         deletRegistro(id) {
-            let ruta = 'api/'+this.ruta + "/" + id;
+            let ruta = "api/" + this.ruta + "/" + id;
+            let token = localStorage.getItem("access_token");
+            let type = localStorage.getItem("type_token");
+            let auth = type + " " + token;
+            let headers = {
+                Authorization: auth,
+            };
             axios
-                .delete(ruta, headers)
+                .delete(ruta, {headers})
                 .then((response) => {
                     let data = response.data.data;
                     //console.log('eliminado',data);
-                    this.getData()
+                    this.getData();
                 })
                 .catch((error) => {
                     let e = error.response.data.data;
@@ -79,9 +96,18 @@ export default {
         },
         getData() {
             let url = "api/" + this.ruta;
-            this.items = []
+            this.items = [];
+            let token = localStorage.getItem("access_token");
+            let type = localStorage.getItem("type_token");
+            let auth = type + " " + token;
+            let headers = {
+                Authorization: auth,
+            };
             axios
-                .get(url, headers)
+                .get(url, {
+                    headers,
+                    params:this.params
+                    })
                 .then((response) => {
                     let data = response.data.data;
                     console.log("discos", data);
@@ -94,7 +120,6 @@ export default {
                     console.log("error_records", e);
                 });
         },
-      
     },
 };
 </script>

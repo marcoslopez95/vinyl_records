@@ -10,7 +10,6 @@
 
 <script>
 import {BCard } from 'bootstrap-vue'
-import config from '../api/auth'
 import axios from 'axios'
 
 export default {
@@ -21,16 +20,29 @@ export default {
         ruta: String,
         method: String
     },
+    data(){
+        return {
+            
+        }
+    },
     components:{
         BCard
     },
     methods: {
         submit(){
-            let url = '/api/'+this.ruta
-            config['url']= url
-            config['method']= this.method,
-            config['data']= this.form,
-            console.log('headers',config);
+            let url = import.meta.env.VITE_APP_BACKEND+'/api/'+this.ruta
+            let token = localStorage.getItem('access_token')
+            let type = localStorage.getItem('type_token')
+            let auth = type + ' ' + token
+            let config = {
+                headers:{
+
+                    Authorization:auth,
+                },
+            url:url,
+            method: this.method,
+            data: this.form,
+            }
             axios(
                 config
             ).then((response)=>{

@@ -1,42 +1,53 @@
 <template>
-<div>
-<CardDiscosVue :fields="fields" :items="records" :name="name"></CardDiscosVue>
-</div>
+    <div>
+        <CardDiscosVue
+            v-if="$route.name == ruta"
+            :fields="fields"
+            :name="name"
+            :ruta="ruta"
+            :params="params"
+        >
+            <template slot="botones">
+                <FiltroDiscos @filtrar="filtrar" />
+            </template>
+        </CardDiscosVue>
+        <router-view v-else></router-view>
+    </div>
 </template>
 
 <script>
-import axios from 'axios'
-import CardDiscosVue from '../components/HomeView/CardBase.vue'
+import CardDiscosVue from "../components/HomeView/CardBase.vue";
+import FiltroDiscos from "../components/Discos/FiltroDiscos.vue";
+
 export default {
-    name: 'discos',
+    name: "generos",
     components: {
-      CardDiscosVue
+        CardDiscosVue,
+        FiltroDiscos,
     },
-    data(){
-      return {
-        records: [],
-        name: 'Disco',
-        fields: [
-          {label: 'Nombre',key:'name'}
-        ]
-      }
+    data() {
+        return {
+            items: [],
+            name: "Disco",
+            ruta: "records",
+            params: null,
+            fields: [
+                { label: "Nombre", key: "name" },
+                { label: "Album", key: "album_name" },
+                { label: "Año", key: "year" },
+                { label: "Artista", key: "artist_name" },
+            ],
+        };
     },
-    methods:{
-      getDiscos(){
-        let url = 'api/records'
-        axios.get(url).then((response)=>{
-          let data = response.data.data
-          console.log('discos',data);
-          this.records.push(data)
-        }).catch((error)=>{
-          let e = error.response.data.data
-          console.log('error_records',e);
-        })
-      }
-    }
-}
+    mounted() {},
+    methods: {
+        filtrar(filtros) {
+            console.log("padre");
+            this.params = filtros;
+        },
+    },
+};
 </script>
 
 <style>
-
 </style>

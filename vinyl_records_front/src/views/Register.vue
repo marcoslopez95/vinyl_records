@@ -1,7 +1,7 @@
-<<template>
+<<<template>
     <div>
         <BCard>
-            <b-button variant="primary" @click="$router.go(-1)"
+            <b-button variant="primary" @click="$emit('login')"
                 >Regresar</b-button
             >
             <BRow class="mt-4">
@@ -115,11 +115,6 @@
             <hr />
             <BRow>
                 <BCol>
-                    <b-form-select @change="form.tastes = []" :options="rols" v-model="form.rol_id"></b-form-select>
-                </BCol>
-            </BRow>
-            <BRow>
-                <BCol v-if="form.rol_id == 2">
                     <p>Seleccione sus gustos Musicales: </p>
                     <div class="form-check form-check-inline" v-for="(option,i) in tastes" :key="i">
                         <input
@@ -136,7 +131,7 @@
             
             <hr />
             <BRow class="mt-2">
-                <BCol sm="2">
+                <BCol sm="4">
                     <b-form-group
                         id="password"
                         label="Contraseña"
@@ -155,7 +150,7 @@
                         </b-form-invalid-feedback>
                     </b-form-group>
                 </BCol>
-                <BCol sm="2">
+                <BCol sm="4">
                     <b-form-group
                         id="password_confirmation"
                         label="Confirmar Contraseña"
@@ -175,7 +170,7 @@
                     </b-form-group>
                 </BCol>
             </BRow>
-            <div class="text-center">
+            <div class="text-center mt-4">
                 <BButton variant="success" :disabled="!validarCampos()" @click="submit()"
                     >Guardar</BButton
                 >
@@ -213,17 +208,16 @@ export default {
     data() {
         return {
             form: {
-                first_name              : "",
-                last_name               : "",
-                phone                   : "",
-                avatar_                 : "",
-                email                   : "",
-                password                : "",
-                password_confirmation   : "",
-                tastes                  : [],
-                rol_id                  : "",
+                first_name: "",
+                last_name: "",
+                phone: "",
+                avatar_: "",
+                email: "",
+                password: "",
+                password_confirmation: "",
+                tastes: [],
+                rol_id: "",
             },
-            id: '',
             tastes: [],
             rols: [{ value: "", text: "Seleccione una opción" }],
             preview: "",
@@ -239,13 +233,10 @@ export default {
         };
     },
     mounted() {
-        this.id = this.$route.params.id;
         let token = localStorage.getItem("access_token");
         let type = localStorage.getItem("type_token");
         this.token = type + " " + token;
         this.getTastes();
-        this.getRols();
-        this.getData()
     },
     updated() {
         //this.validarCampos();
@@ -264,34 +255,23 @@ export default {
             console.warn("validarForm", bool);
             return bool;
         },
-        validarRol() {
-            if (this.form.rol_id == "") return null;
-            let bool = this.form.rol_id != "";
-            console.log("validarRol", bool);
-            return bool;
-        },
         validarPassword() {
-            if(this.form.password == '')
-                return null
-            let bool =this.form.password.length >= 7;
+            if (this.form.password == "") return null;
+            let bool = this.form.password.length >= 7;
             console.log("validarpassword", bool);
             return bool;
         },
-        validarPasswordConfirmation(){
-            if(this.form.password_confirmation == '')
-                return null
-            let bool = this.form.password === this.form.password_confirmation
+        validarPasswordConfirmation() {
+            if (this.form.password_confirmation == "") return null;
+            let bool = this.form.password === this.form.password_confirmation;
             console.log("validarpasswordConfri", bool);
-            return bool
+            return bool;
         },
         validarTastes() {
-            if (this.form.tastes.length == 0 && this.form.rol_id == "") return null;
+            if (this.form.tastes.length == 0)
+                return null;
             let bool;
-            if (this.form.rol_id != 1 && this.form.rol_id != "") {
                 bool = this.form.tastes.length != 0;
-            } else if (this.form.rol_id == 1) {
-                bool = true;
-            }
             console.log("validarTastes", bool);
             return bool;
         },
@@ -342,11 +322,9 @@ export default {
             }
         },
         getTastes() {
-            let url = "api/genres";
-            let headers = {
-                Authorization: this.token,
-            };
-            axios.get(url, { headers }).then((response) => {
+            let url = "api/tastes";
+        
+            axios.get(url).then((response) => {
                 let data = response.data.data;
                 data.forEach((element) => {
                     this.tastes.push({
@@ -356,63 +334,19 @@ export default {
                 });
             });
         },
-        getRols() {
-            let url = "api/rols";
-            let config = {
-                headers: {
-                    Authorization: this.token,
-                },
-            };
-            axios.get(url, config).then((response) => {
-                let data = response.data.data;
-                data.forEach((element) => {
-                    this.rols.push({
-                        value: element.id,
-                        text: element.name,
-                    });
-                });
-            });
-        },
-        getData(){
-          let config = {
-                headers: {
-                    Authorization: this.token,
-                },
-            };
-
-          let url = 'api/users/'+this.id
-          axios.get(url,config).then((response)=>{
-              let data = response.data.data
-                this.form.first_name           = data.first_name           
-                this.form.last_name            = data.last_name            
-                this.form.phone                = data.phone                
-                this.form.avatar_              = this.preview = data.avatar
-                this.form.email                = data.email                
-                this.form.tastes               = data.tastes               
-                this.form.rol_id               = data.rol_id               
-              this.validarNombre()
-          }).catch((error)=>{
-
-          })
-      },
+       
         submit() {
-            let config = {
-                headers: {
-                    Authorization: this.token,
-                },
-            };
-
-            let url = "api/users/"+this.id;
+            let url = "api/register";
 
             axios
-                .put(url, this.form, config)
+                .post(url, this.form)
                 .then((response) => {
                     let data = response.data.data;
-                    this.$router.push({name:'users'})
+                    this.$router.go(0)
                 })
                 .catch((error) => {
-                    let e = error.response.data;
-                    console.log(error.response.data)
+                    //this.$router.go(0)
+                    //this.$router.push({name:'login'})
                 });
         },
     },
@@ -420,4 +354,4 @@ export default {
 </script>
 
 <style>
-</style>>
+</style>>>

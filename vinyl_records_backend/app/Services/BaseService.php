@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Interfaces\CrudInterfaz;
 use App\Repositories\BaseRepository;
+use Illuminate\Http\Client\Request;
 
 class BaseService implements CrudInterfaz {
     protected $repository;
@@ -13,7 +14,7 @@ class BaseService implements CrudInterfaz {
         $this->repository = $repository;
     }
 
-    public function _index(array $data = []){
+    public function _index($data){
         return $this->repository->_index($data);
     }
 

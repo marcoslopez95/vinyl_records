@@ -1,6 +1,6 @@
 <template>
     <div>
-        <CreateBase :form="form" ruta="artists" :validated="validated" method="post">
+        <CreateBase :form="form" :ruta="'artists/'+id" :validated="validated" method="put">
             <BRow class="mt-4">
                 <BCol>
                     <b-form-group
@@ -25,6 +25,7 @@
 <script>
 import CreateBase from "@/components/CreateBase.vue";
 import { BButton } from "bootstrap-vue";
+import axios from 'axios';
 
 export default {
     components: { CreateBase,BButton },
@@ -36,9 +37,29 @@ export default {
         validated: false
       }
     },
+    mounted(){
+        this.id = this.$route.params.id;
+        this.getData()
+    },
     methods:{
       validarNombre(){
         this.validated = this.form.name.length >= 2
+      },
+      getData(){
+          let token = localStorage.getItem('access_token')
+            let type = localStorage.getItem('type_token')
+            let auth = type + ' ' + token
+            let headers ={
+            'Authorization': auth
+            }
+          let url = 'api/artists/'+this.id
+          axios.get(url,{headers}).then((response)=>{
+              let data = response.data.data
+              this.form.name = data.name
+              this.validarNombre()
+          }).catch((error)=>{
+
+          })
       }
     }
 

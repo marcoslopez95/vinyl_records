@@ -14,7 +14,7 @@ class RolController extends BaseController implements CrudApiInterfaz
     }
 
     public function index(Request $request){
-        return parent::_index($request->all());
+        return parent::_index($request);
     }
 
     public function store(Request $request){

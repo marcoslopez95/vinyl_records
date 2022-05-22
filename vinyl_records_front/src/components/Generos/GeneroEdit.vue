@@ -26,7 +26,7 @@
 import CreateBase from "@/components/CreateBase.vue";
 import { BButton } from "bootstrap-vue";
 import axios from 'axios';
-import headers from '@/api/auth'
+
 export default {
     components: { CreateBase,BButton },
     data(){
@@ -47,9 +47,14 @@ export default {
         this.validated = this.form.name.length >= 2
       },
       getData(){
-          
+          let token = localStorage.getItem('access_token')
+            let type = localStorage.getItem('type_token')
+            let auth = type + ' ' + token
+            let headers ={
+            'Authorization': auth
+            }
           let url = 'api/genres/'+this.id
-          axios.get(url,headers).then((response)=>{
+          axios.get(url,{headers}).then((response)=>{
               let data = response.data.data
               this.form.name = data.name
               this.validarNombre()
